@@ -1,0 +1,117 @@
+﻿@model PagedList.IPagedList<AuthModule.Models.AspUser>
+@using PagedList.Mvc;
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<h2 style="color:red">@ViewBag.Error</h2>
+@if (ViewBag.Role == 0)
+{
+    <div class="form-horizontal">
+        <br />
+        <br />
+       
+            <div class="pull-left">
+                <input type="text" id="searchtxt" placeholder="Search Users..." name="search2" value="@ViewBag.searchtxt">
+                <button  onclick="searchUser()"><i class="fa fa-search"></i></button>
+                @*<button onclick="location.href='@Url.Action("UserManagement", "Home",new {searchtxt=ViewBag.searchtxt })'"><i class="fa fa-search"></i></button>*@              
+             </div>
+
+            <div class="pull-right">
+                @Html.ActionLink("Add New User", "UserRegister", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            </div>
+       
+        <br />
+        
+    </div>
+    
+
+        <div class="row" id="PartialLoad" style="margin-top:2%">
+            <table class="table table-bordered" id="UGrid">
+                <tr>
+                    <th>User</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>
+                    @if (item.IsLock == true)
+                        {
+                            @Html.ActionLink("Lock", "enableDesableUser", "Manage", new { Id = @item.UserId, Isactive = !item.IsLock, pageNumber = Page }, new { @class = "btn btn-danger" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("UnLock", "enableDesableUser", "Manage", new { Id = @item.UserId, Isactive = !item.IsLock, pageNumber = Page }, new { @class = "btn btn-primary" })
+                        }
+                </td>
+
+                <td>
+                  
+                    <button class="btn btn-primary" onclick="deletUser(this)" name="@item.UserId">Delete</button>
+                  
+                </td>
+                <td>
+                    @if (item.Password == null)
+                    {
+                        <button class="btn btn-primary" onclick="ResetPasswod(this)" name="@item.UserId">Reset Password</button>
+                            @*@Html.ActionLink("Reset Password", "EnableDisableUser", "Home", new { Id = @item.UserId }, new { @class = "btn btn-primary" })*@
+                     }
+                </td>
+            </tr>
+                }
+            }
+            </table>
+            @if (Model != null)
+        {
+        @Html.PagedListPager(Model, page => Url.Action("UserManagement", new { ViewBag.AppId, ViewBag.AppName, page }))
+        @*@Html.PagedListPager(Model, page => Url.Action("UserByApp", new { ViewBag.Id, page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "UGrid" }))*@
+        }
+        </div>
+        }
+        else
+        {
+        <div class="form-horizontal">
+            <br />
+            <br />
+            <h4 style="color:red">User Cannot Authorized for This Module!!</h4>
+        </div>
+        }
+
+<script>
+    function searchUser()
+    {
+        debugger;
+        var valtext = $("#searchtxt").val();//you can do also by  getelementbyid
+        window.location.href = '/Manage/UserManagement?searchtxt=' + valtext;
+
+        //window.location.href = '<%= Url.Action("UserManagement", new {searchtxt = valtext}) %>/valtext';
+    }
+
+    function ResetPasswod(e)
+    {
+        debugger;
+        var id = e.name;
+
+        $.post("/manage/adminResetPassword",
+            {
+                userid: id,               
+            },
+            function (data, status) {
+                if (data != "1")
+                    alert("Message: " + data );
+            });
+    }
+
+    function deletUser(e) {
+        debugger;
+        if (confirm("Are you sure you want to delete this?")) {
+            var id = e.name;
+            window.location.href = '/Manage/DeleteUser?Id=' + id;
+        }
+
+        
+    }
+</script>

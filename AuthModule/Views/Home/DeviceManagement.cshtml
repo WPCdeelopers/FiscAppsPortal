@@ -1,0 +1,70 @@
+﻿@model PagedList.IPagedList<AuthModule.Models.DeviceViewModel>
+@using PagedList.Mvc;
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@if (ViewBag.Role == 0)
+{
+    <br />
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>Email</th>
+            <th>App Name</th>
+            <th>Device Name</th>
+            <th>Os</th>
+            <th>Version</th>           
+            <th></th>
+            <th></th>
+        </tr>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Appname)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Devicename)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DeviceOs)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DeviceVersion)</td>                   
+                    <td>
+                        @if (item.IsActive == true)
+                        {
+                            @Html.ActionLink("Disable", "EnableDisableDevice", "Home", new { Id = @item.Id, Isactive=!item.IsActive, pageNumber=Page },new {@class="btn btn-danger" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Enable", "EnableDisableDevice", "Home", new { Id = @item.Id, Isactive = !item.IsActive }, new { @class = "btn btn-primary" })
+                        }
+                    </td>
+                    <td>
+
+                        <button class="btn btn-primary" onclick="deletDevice(this)" name="@item.Id">Delete</button>
+
+                    </td>
+
+                </tr>
+            }
+        }
+    </table>
+
+    @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount;*@
+    @Html.PagedListPager(Model, page => Url.Action("DeviceManagement", new { page }))
+}
+else
+{
+    <div class="form-horizontal">
+        <br />
+        <br />
+        <h4 style="color:red">User Cannot Authorized for This Module!!</h4>
+    </div>
+}
+
+<script>
+    function deletDevice(e) {
+        debugger;
+        if (confirm("Are you sure you want to delete this?")) {
+            var id = e.name;
+            window.location.href = '/Home/deleteDevice?Id=' + id;
+        }
+    }
+</script>

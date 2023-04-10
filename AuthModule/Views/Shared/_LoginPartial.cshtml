@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+        <input type="hidden" id="token" />
+        <a href="JavaScript:Void(0);" style="background:none">   </a>
+        <div class="subnav">
+            <button class="subnavbtn"><i class="fa fa-user"></i> <i class="fa fa-caret-down"></i></button>
+            <div class="subnav-content">
+                @*<a href="#company">Change Password</a>*@
+                @Html.ActionLink("Change Password", "ChangePassword", "Manage", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+                <a href="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">Log off</a>               
+            </div>
+        </div>
+        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+        if (ViewBag.Role == 0)
+        {
+            @Html.ActionLink("User Management ", "UserManagement", "Manage", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            @*<div class="subnav">
+                <button class="subnavbtn">Registration <i class="fa fa-caret-down"></i></button>
+                <div class="subnav-content">
+                   @Html.ActionLink("APP Registration ", "AppRegistration", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+                    @Html.ActionLink("User Registration", "UserRegister", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })                  
+                </div>
+            </div>*@
+
+            <div class="subnav">
+                <button class="subnavbtn">Management <i class="fa fa-caret-down"></i></button>
+                <div class="subnav-content">
+                    @*@Html.ActionLink("User Management ", "UserManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })*@
+                    @Html.ActionLink("Device Management", "DeviceManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+                    @Html.ActionLink("App Management", "AppManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+                </div>
+            </div>
+        }
+        else if (ViewBag.Role == 1)
+        {
+            <div class="subnav">
+                <button class="subnavbtn">Management <i class="fa fa-caret-down"></i></button>
+                <div class="subnav-content">
+                    @*@Html.ActionLink("User Management ", "UserManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })*@                   
+                    @Html.ActionLink("App Management", "AppManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+                </div>
+            </div>
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+          @*<ul class="nav navbar-nav navbar-right">
+        @if (ViewBag.Role == 0)
+        {
+            <li>
+                @Html.ActionLink("User Registration", "UserRegister", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li>
+                @Html.ActionLink("Mobile App List", "MobileAppManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            </li>
+             <li>
+               @Html.ActionLink("APP Registration ", "AppRegistration", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            </li>
+             <li>
+               @Html.ActionLink("User Management ", "UserManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+
+            </li>
+            <li>
+            @Html.ActionLink("Device", "DeviceManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+
+            </li>
+
+        }
+        else if (ViewBag.Role == 1)
+        {
+            <li>
+                @Html.ActionLink("User Management ", "UserManagement", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+            </li>
+        }
+        <li>
+            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+        </li>
+        <li><a href="javascript:sessionStorage.removeItem('accessToken');$('#logoutForm').submit();">Log off</a></li>
+    </ul>*@
+        }
+ }
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: new { area = "" }, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: new { area = "" }, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

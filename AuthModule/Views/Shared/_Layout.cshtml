@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        /*.navbar {
+            min-height: 60px !important;
+            background-color:#000;
+        }*/
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+
+        /*.navbar {
+            overflow: hidden;
+            background-color: #333;
+        }*/
+
+            .navbar a {
+                float: right;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+        .subnav {
+            float: right;
+            overflow: hidden;
+        }
+
+            .subnav .subnavbtn {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 16px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+            }
+
+            .navbar a:hover, .subnav:hover .subnavbtn {
+                background-color: black;
+            }
+
+        .subnav-content {
+            display: none;
+            position: absolute;
+            left: 0;
+            background-color: black;
+            width: 100%;
+            z-index: 1;
+        }
+
+            .subnav-content a {
+                float: right;
+                color: white;
+                text-decoration: none;
+            }
+
+                .subnav-content a:hover {
+                    background-color: #eee;
+                    color: black;
+                }
+
+        .subnav:hover .subnav-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+
+                @Html.ActionLink(" ", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @style = "background-image:url('/Images/Logo_WPC_WHT.jpg');width:245px;background-repeat: no-repeat;" })
+                
+                @*<a href="@Url.Action("Index", "Home", null)">
+                    <img src="~/Images/Logo_WPC_WHT.jpg" height:50px/>
+                <a />*@
+             </div>
+            <div class="navbar">
+                @*<div class="navbar-collapse collapse">*@
+                @*<div id="navbar" class="navbar-collapse collapse">*@
+                @*<ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>
+            </ul>*@
+                @Html.Partial("_LoginPartial")
+               
+            </div>
+
+          
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        @RenderSection("SPAViews", required: false)
+        <hr />
+        <footer>
+            <p style="text-align:center;">&copy; @DateTime.Now.Year - Winter Park Construction</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", required: false)
+
+    
+</body>
+</html>

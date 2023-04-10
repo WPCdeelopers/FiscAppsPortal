@@ -1,0 +1,182 @@
+﻿
+@if (ViewBag.Role == 0)
+{
+
+
+
+#line default|#|
+#line hidden
+
+#line 4 "D:\My\AuthModule_Project\AuthModule\AuthModule\Views\Home\UserManagement.cshtml"
+                                                __o = ViewBag.AppId;
+
+
+#line default
+#line hidden
+
+#line 5 "D:\My\AuthModule_Project\AuthModule\AuthModule\Views\Home\UserManagement.cshtml"
+    __o = ViewBag.AppName;
+    {
+
+<div class="form-horizontal">
+    <input type="hidden" id="SelectAppid" value="" name="testing" />
+    <br />
+        <h4>User Management</h4>
+       <label>Select App Type: </label> @Html.DropDownList("AppTypeList", new SelectList(ViewBag.AppType, "Id", "AppType"), "Please select", new { @id = "ddlAppType" })
+    <br />
+    <br />
+    <div id="AppRegion">
+        @*<label>Select App: </label> @Html.DropDownList("AppId", new SelectList(ViewBag.AppList, "AppId", "AppName"), "Please select", new { @id = "ddlAppid" })*@
+        
+    </div>
+
+   
+    <br />
+    <div class="row" id="PartialLoad">
+        @Html.Partial("_UserValidationView")
+    </div>
+
+ </div>
+
+@section Scripts
+{
+    <script>
+        // Adding popstate event listener to handle browser back button  
+        //window.addEventListener("popstate", function (e) {
+        //    $.ajax({
+        //        url: location.href,
+        //        success: function (result) {
+        //            $('#ProductList').html(result);
+        //        }
+        //    });
+        //});
+        //function ChangeUrl(page, url) {
+        //    if (typeof (history.pushState) != "undefined") {
+        //        var obj = { Page: page, Url: url };
+        //        history.pushState(null, obj.Page, obj.Url);
+        //    } else {
+        //        alert("Browser does not support HTML5.");
+        //    }
+        //}
+
+
+
+
+  $(function () {
+
+           $("#ddlAppType").change(function (e) {
+               debugger;
+               var val = $(this).val();
+               $('#AppRegion').html('');
+               $('#PartialLoad').html('');
+               if (val.trim()) {
+                   $.ajax({
+                       type: "post",
+                       url: "/Home/GetAppByAppType",
+                       data: { AppTypeId: val },
+                       datatype: "json",
+                       traditional: true,
+                       success: function (data) {
+                           var AppList = "<label>Select App: </label><select id='ddlAppid' onchange='LoadUser()'>";
+                           AppList = AppList + '<option value="">--Select--</option>';
+                           for (var i = 0; i < data.length; i++) {
+                               AppList = AppList + '<option value=' + data[i].AppId + '>' + data[i].AppName + '</option>';
+                           }
+                           AppList = AppList + '</select>';
+                           $('#AppRegion').html(AppList);
+                       }
+                   });
+               }
+            });
+
+        //$("#ddlAppid").change(function (e) {
+        //    debugger;
+        //    var val = $(this).val();
+        //    $('#SelectAppid').val(val);
+        //    if (val.trim()) {
+        //        // is empty or whitespace              
+        //        $("#PartialLoad").load("/Home/UserByApp/" + val);
+        //    }
+        //});
+
+
+        $('body').on('click', '#PartialLoad .pagination a', function (event) {
+            debugger;
+            event.preventDefault();
+            
+            var url = $(this).attr('href');
+            console.log(url);
+            $.ajax({
+                url: url,
+                success: function (result) {
+                    //ChangeUrl('UserByApp', url);
+                    $('#PartialLoad').html(result);
+                }
+            });
+        });
+
+
+
+     });
+
+        function LoadUser()
+        {
+            debugger;
+            var val = $('#ddlAppid').val();
+            $('#SelectAppid').val(val);
+            if (val.trim()) {
+                // is empty or whitespace              
+                $("#PartialLoad").load("/Home/UserByApp/" + val);
+            }
+        }
+
+        function AllowAccessOnChange(element) {
+            debugger;
+            var ischeck = element.checked ? true : false;
+            var Appid = $('#SelectAppid').val();
+            var userid = element.id;
+
+            $.post("/Home/setAllowAccess",
+                {
+                    userid: userid,
+                    Appid: Appid,
+                    IsAllow: ischeck,
+                    Opr:"AllowAccess"
+                },
+                function (data, status) {
+                    if (data != "1")
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+
+        }
+
+        function AppAdminOnChange(element) {
+            debugger;
+            var ischeck = element.checked ? true : false;
+            var Appid = $('#SelectAppid').val();
+            var userid = element.id;
+
+            $.post("/Home/setAllowAccess",
+                {
+                    userid: userid,
+                    Appid: Appid,
+                    IsAllow: ischeck,
+                    Opr: "AppAdmin"
+                },
+                function (data, status) {
+                    if(data!="1")
+                    alert("Data: " + data + "\nStatus: " + status);
+                });
+
+        }
+    </script>
+}
+}
+else
+{
+    <div class="form-horizontal">
+        <br />
+        <br />
+        <h4 style="color:red">User Cannot Authorized for This Module!!</h4>
+     </div>
+}

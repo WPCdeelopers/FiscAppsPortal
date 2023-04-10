@@ -1,0 +1,60 @@
+﻿@model PagedList.IPagedList<AuthModule.Models.AppViewModel>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/app")
+}
+@using PagedList.Mvc;
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@if (ViewBag.Role == 0 || ViewBag.Role == 1)
+{
+    <br />
+    <br />
+    <div class="pull-right">
+        @Html.ActionLink("Add New APP", "AppRegistration", "Home", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage" })
+    </div>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>App Key/URL</th>
+            <th>App Name</th>
+            <th>App Type</th>
+            @*<th>Logo</th>*@
+            <th>Default Access</th>
+            <th>IsActive</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem =>item.AppKey)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AppName)</td>   
+                    <td>@Html.DisplayFor(modelItem => item.AppType)</td>
+                    @*<td><img src="~/Image/@Html.DisplayFor(modelItem => item.AppLogo)" style="height:50px;width:50px;" />
+                        @Html.DisplayFor(modelItem => item.AppLogo)</td>*@  
+                    <td>@Html.DisplayFor(modelItem => item.DefaultAccess)</td>
+                    <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                    <td>@Html.ActionLink("Edit", "EditAppRegistration", "Home", new { AppId = @item.AppId }, htmlAttributes: null)</td>
+                    <td>@Html.ActionLink("User Permission", "AppUserPermission", "Home", new { AppId = @item.AppId, AppName=item.AppName }, htmlAttributes: null)</td>
+                    
+                </tr>
+            }
+        }
+    </table>
+
+    @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount;*@
+    @Html.PagedListPager(Model, page => Url.Action("AppManagement", new { page }))
+}else
+{
+<div class="form-horizontal">
+    <br />
+    <br />
+    <h4 style="color:red">User Cannot Authorized for This Module!!</h4>
+</div>
+}
+
+

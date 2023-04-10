@@ -1,0 +1,92 @@
+﻿
+@model List<AuthModule.AppRegistration>
+
+@*@section SPAViews {
+    @Html.Partial("_Home")
+}*@
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/app")
+}
+<br />
+<br />
+
+<div class="row">
+    @{int i = 0; }
+    @foreach (var item in Model)
+    {
+        //if (i < 3)
+        //{
+
+            <div class="col-lg-3">
+                <a href="@Url.Action("AppRedirect", "Home", new RouteValueDictionary(new { AppId = @item.Id }))"  id="@item.Id">
+                    <img src="~/Image/@Html.DisplayFor(modelItem => item.ImagePath)" style="height:150px;width:200px;" />
+                    <br />
+                    @Html.DisplayFor(modelItem => item.AppName)
+                </a>
+                <br />
+            @if (ViewBag.Role == 0) {
+
+                @Html.ActionLink("Edit", "EditAppRegistration", "Home", new { AppId = @item.Id }, htmlAttributes: null)
+              }
+            </div>
+
+            @*i = i + 1;
+        }
+        if (i == 3)
+        {
+            
+            i = 0;
+        }*@
+
+    }
+    </div>
+
+
+
+
+    @*<div class="row">
+            <div class="col-lg-3">
+                <a href="javascript:void(0)" onclick="getToken()" id="Portal" name="weatherReport">
+                    <img src="~/Images/Weather.png" height="200" width="200" />
+                    <br />
+                    Weather Report
+                </a>
+            </div>
+        </div>*@
+
+
+
+
+
+    <script>
+        function getToken() {
+            debugger;
+            //alert('Hi');
+            //var PortalName = $('#Portal').attr('name');
+
+            var token = $("#token").val();
+
+            //$.get("/Home/RedirectToPortal?PortalName=" + PortalName, function (Path, status) {
+            //    //alert("Data: " + data + "\nStatus: " + status);
+            //    //// similar behavior as an HTTP redirect
+            //    //window.location.replace("http://stackoverflow.com");
+
+            //    //// similar behavior as clicking on a link
+            //    //window.location.href = "http://stackoverflow.com";
+
+            //    //window.location.href = Path;
+            //    window.location.replace(Path);
+            //});
+        }
+    </script>
+
+
+
+
+
+
+
+

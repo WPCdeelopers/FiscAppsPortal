@@ -1,0 +1,98 @@
+﻿@model PagedList.IPagedList<AuthModule.Models.UserValidationViewModel>
+@using PagedList.Mvc;
+<link href="/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+@if (ViewBag.Role == 0 || ViewBag.Role == 1)
+{
+    <div class="form-horizontal">
+        <input type="hidden" id="SelectAppid" value="@ViewBag.AppId" name="testing" />
+        <br />
+        <h4>App User Permission</h4>
+        <label>Select App Name: </label> @ViewBag.AppName
+        <br />
+        <br />      
+
+    </div>
+    <div class="row" id="PartialLoad">
+        <table class="table table-bordered" id="UGrid">
+            <tr>
+                <th>UserId</th>
+                <th>Allow Access</th>
+                <th>App Admin</th>
+            </tr>
+            @if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.CheckBoxFor(modelItem => item.IsAllowAccess, new { id = item.UserId, onchange = "AllowAccessOnChange(this)" })</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.IsAllowAccess)</td>*@
+                        @*<td>@Html.CheckBox("AllowAccess", item.IsAllowAccess, new { id = item.UserId, onchange = "AllowAccessOnChange(this)" })</td>*@
+                        <td>@Html.CheckBoxFor(modelItem => item.IsAppAdmin, new { id = item.UserId, onchange = "AppAdminOnChange(this)" })</td>
+                        @*<td>@Html.DisplayFor(modelItem => item.IsAppAdmin)</td>*@
+                    </tr>
+                }
+            }
+        </table>
+        @if (Model != null)
+        {
+        @Html.PagedListPager(Model, page => Url.Action("AppUserPermission", new { ViewBag.AppId, ViewBag.AppName, page }))
+        @*@Html.PagedListPager(Model, page => Url.Action("UserByApp", new { ViewBag.Id, page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "UGrid" }))*@
+        }
+    </div>
+
+  @section Scripts
+{
+            <script>             
+                function AllowAccessOnChange(element) {
+                    debugger;
+                    var ischeck = element.checked ? true : false;
+                    var Appid = $('#SelectAppid').val();
+                    var userid = element.id;
+
+                    $.post("/Home/setAllowAccess",
+                        {
+                            userid: userid,
+                            Appid: Appid,
+                            IsAllow: ischeck,
+                            Opr: "AllowAccess"
+                        },
+                        function (data, status) {
+                            if (data != "1")
+                                alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                }
+
+                function AppAdminOnChange(element) {
+                    debugger;
+                    var ischeck = element.checked ? true : false;
+                    var Appid = $('#SelectAppid').val();
+                    var userid = element.id;
+
+                    $.post("/Home/setAllowAccess",
+                        {
+                            userid: userid,
+                            Appid: Appid,
+                            IsAllow: ischeck,
+                            Opr: "AppAdmin"
+                        },
+                        function (data, status) {
+                            if (data != "1")
+                                alert("Data: " + data + "\nStatus: " + status);
+                        });
+
+                }
+            </script>
+  }
+        }
+        else
+        {
+        <div class="form-horizontal">
+            <br />
+            <br />
+            <h4 style="color:red">User Cannot Authorized for This Module!!</h4>
+        </div>
+        }

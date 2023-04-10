@@ -1,0 +1,131 @@
+﻿@model AuthModule.Models.AppRegistrationModel
+
+@using (Html.BeginForm("AppRegistration", "Home", FormMethod.Post, new
+{
+    enctype = "multipart/form-data"
+}))
+{
+    @Html.AntiForgeryToken()
+
+    <br />
+    <br />
+
+    <div class="form-horizontal">
+        @if (Model.Id == 0)
+        {
+            <h4>App Registration</h4>
+        }
+        else
+        {
+            <h4>Edit App Registration</h4>
+        }
+        <hr />
+        @*@Html.ValidationSummary("", "", new { @class = "text-danger" })*@
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AppTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @if (Model.Id == 0)
+                {
+                    @Html.DropDownList("AppTypeId", new SelectList(ViewBag.AppType, "Id", "AppType"), "Please select", new { value = @Model.AppTypeId, @id = "AppTypeId", @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownList("AppTypeId", new SelectList(ViewBag.AppType, "Id", "AppType"), "Please select", new { value = @Model.AppTypeId, @id = "AppTypeId", @class = "form-control", @disabled = @Model.Id == 0 ? "false" : "disabled" })
+
+                }
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group" id="Url">
+            @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DefaultAuthorized, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.DefaultAuthorized, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @*<img src="~/Image/@Url.Content(Model.ImageName)" />*@
+            <img src="~/Image/@Html.DisplayFor(model => model.ImageName)" style="height:100px;padding-left:15px" />
+            @Html.LabelFor(model => model.ImageName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.ImageName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ImageName, "", new { @class = "text-danger" })*@
+                <input type="file" name="ImageFile" style="padding-left:105px; max-width:unset!important" />
+            </div>
+
+           
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "AppManagement")
+</div>
+
+<script>
+    $(function () {
+        $("#AppTypeId").change(function (e) {
+            debugger;
+            //alert('Hi')
+            var value = $(this).val();
+            if (value == "2")
+                $("#Url").hide();
+            else
+                $("#Url").show();
+
+        });
+
+
+        $(document).ready(function () {
+            debugger;
+            var id = @Model.Id;
+            if (id != 0) {
+                //$("#AppTypeId").attr('disabled', 'disabled');
+
+                var AppType =@Model.AppTypeId;
+               // $("#AppTypeId").val(AppType);
+                //$('select[name="AppTypeId"] option[value="'+AppType+'"]').attr('selected', 'selected');
+
+                if(AppType==2)
+                     $("#Url").hide();
+            }
+
+        });
+
+    });
+</script>
